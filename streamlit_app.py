@@ -93,55 +93,64 @@ def main():
         st.error(f"Failed to train models: {exc}")
         st.stop()
 
-    left, right = st.columns([1.1, 1])
+    predict_tab, performance_tab = st.tabs(["User Prediction", "Model Performance"])
 
-    with left:
-        st.subheader("Enter Health Indicators")
-        input_data = {}
-        for col in feature_cols:
-            input_data[col] = input_widget(col, df[col])
+    with predict_tab:
+        st.subheader("Check Your Diabetes Risk")
+        st.write("Fill in your health indicators and click Predict to see risk estimates.")
 
-        input_df = pd.DataFrame([input_data])
+        form_col, result_col = st.columns([1.2, 1])
 
-        if st.button("Predict Diabetes Risk", type="primary"):
-            lr_prob = float(lr_model.predict_proba(scaler.transform(input_df))[0][1])
-            rf_prob = float(rf_model.predict_proba(input_df)[0][1])
+        with form_col:
+            input_data = {}
+            for col in feature_cols:
+                input_data[col] = input_widget(col, df[col])
+            input_df = pd.DataFrame([input_data])
 
-            lr_pred = int(lr_prob >= 0.5)
-            rf_pred = int(rf_prob >= 0.5)
+            predict_clicked = st.button("Predict Diabetes Risk", type="primary")
 
-            st.markdown("### Prediction Results")
-            p1, p2 = st.columns(2)
+        with result_col:
+            st.markdown("### Results")
+            if predict_clicked:
+                lr_prob = float(lr_model.predict_proba(scaler.transform(input_df))[0][1])
+                rf_prob = float(rf_model.predict_proba(input_df)[0][1])
 
-            with p1:
-                st.metric("Logistic Regression", "Diabetes" if lr_pred == 1 else "No Diabetes")
-                st.progress(lr_prob)
-                st.write(f"Probability: **{lr_prob:.2%}**")
+                lr_pred = int(lr_prob >= 0.5)
+                rf_pred = int(rf_prob >= 0.5)
 
-            with p2:
-                st.metric("Random Forest", "Diabetes" if rf_pred == 1 else "No Diabetes")
-                st.progress(rf_prob)
-                st.write(f"Probability: **{rf_prob:.2%}**")
+                p1, p2 = st.columns(2)
 
-            avg_prob = (lr_prob + rf_prob) / 2
-            st.info(f"Average model risk score: **{avg_prob:.2%}**")
+                with p1:
+                    st.metric("Logistic Regression", "Diabetes" if lr_pred == 1 else "No Diabetes")
+                    st.progress(lr_prob)
+                    st.write(f"Probability: **{lr_prob:.2%}**")
 
-    with right:
+                with p2:
+                    st.metric("Random Forest", "Diabetes" if rf_pred == 1 else "No Diabetes")
+                    st.progress(rf_prob)
+                    st.write(f"Probability: **{rf_prob:.2%}**")
+
+                avg_prob = (lr_prob + rf_prob) / 2
+                st.info(f"Average model risk score: **{avg_prob:.2%}**")
+                st.caption("This tool is for educational use and not a medical diagnosis.")
+            else:
+                st.caption("Prediction results will appear here after you click the button.")
+
+    with performance_tab:
         st.subheader("Model Comparison on Test Set")
         st.dataframe(
             metrics.style.format({"Logistic Regression": "{:.4f}", "Random Forest": "{:.4f}"}),
             width="stretch",
         )
 
-        plot_df = metrics.set_index("Metric")
-        st.bar_chart(plot_df)
+        st.bar_chart(metrics.set_index("Metric"))
 
-        st.markdown("### Dataset Snapshot")
-        st.write(f"Rows: **{len(df):,}**")
-        st.write(f"Features: **{len(feature_cols)}**")
-        class_dist = df[TARGET_COL].value_counts(normalize=True) * 100
-        st.write(f"Class 0: **{class_dist.get(0.0, 0):.2f}%**")
-        st.write(f"Class 1: **{class_dist.get(1.0, 0):.2f}%**")
+        with st.expander("Dataset Snapshot"):
+            st.write(f"Rows: **{len(df):,}**")
+            st.write(f"Features: **{len(feature_cols)}**")
+            class_dist = df[TARGET_COL].value_counts(normalize=True) * 100
+            st.write(f"Class 0: **{class_dist.get(0.0, 0):.2f}%**")
+            st.write(f"Class 1: **{class_dist.get(1.0, 0):.2f}%**")
 
 
 if __name__ == "__main__":
