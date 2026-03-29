@@ -109,6 +109,27 @@ def input_widget(col_name: str, series: pd.Series):
 def main():
     st.set_page_config(page_title="Diabetes Health Indicator", page_icon="🩺", layout="wide")
 
+    # Hide Streamlit deploy controls for local/demo usage.
+    st.markdown(
+        """
+        <style>
+        .stDeployButton {
+            display: none !important;
+        }
+        [data-testid="stAppDeployButton"] {
+            display: none !important;
+        }
+        button[aria-label*="Deploy"],
+        button[title*="Deploy"],
+        a[aria-label*="Deploy"],
+        a[href*="share.streamlit.io"] {
+            display: none !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
     st.title("Diabetes Health Indicator Predictor")
     st.caption("Supervised classification using Logistic Regression and Random Forest")
 
