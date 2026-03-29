@@ -9,6 +9,22 @@ from sklearn.preprocessing import StandardScaler
 DATA_PATH = "data/raw/diabetes_health_indicators.csv"
 TARGET_COL = "Diabetes_binary"
 
+AGE_GROUP_LABELS = {
+    1.0: "18-24",
+    2.0: "25-29",
+    3.0: "30-34",
+    4.0: "35-39",
+    5.0: "40-44",
+    6.0: "45-49",
+    7.0: "50-54",
+    8.0: "55-59",
+    9.0: "60-64",
+    10.0: "65-69",
+    11.0: "70-74",
+    12.0: "75-79",
+    13.0: "80+",
+}
+
 
 @st.cache_resource
 def train_models():
@@ -65,6 +81,18 @@ def train_models():
 
 def input_widget(col_name: str, series: pd.Series):
     uniques = sorted(series.dropna().unique())
+
+    # In this dataset, Age is an encoded category (1-13), not raw years.
+    if col_name == "Age":
+        options = [float(v) for v in uniques]
+        default = 6.0 if 6.0 in options else options[0]
+        return st.selectbox(
+            "Age Group",
+            options=options,
+            index=options.index(default),
+            format_func=lambda v: AGE_GROUP_LABELS.get(v, "Unknown"),
+            help="Age is encoded as a group code in this dataset.",
+        )
 
     # Binary and low-cardinality fields become select boxes for easier input.
     if len(uniques) <= 10:

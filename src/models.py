@@ -60,7 +60,7 @@ def get_cross_validation_score(model, X, y, cv=5):
     Parameters:
     -----------
     model : sklearn model
-        Model to evaluate
+        Model to score
     X : np.ndarray
         Features
     y : np.ndarray

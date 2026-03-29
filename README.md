@@ -38,7 +38,6 @@ Diabetes-Health-Indicator/
 │   ├── __init__.py
 │   ├── preprocessing.py          # Data preprocessing functions
 │   ├── models.py                 # Model training functions
-│   └── evaluation.py             # Evaluation metrics
 ├── results/                       # Model outputs
 │   ├── models/                   # Trained model files
 │   └── plots/                    # Visualization outputs
@@ -128,7 +127,7 @@ Then open:
 1. **Explore** → Understand data distribution and relationships
 2. **Preprocess** → Clean, transform, and prepare data
 3. **Train** → Build and compare models
-4. **Evaluate** → Assess performance using multiple metrics
+4. **Compare** → Compare performance using multiple metrics
 5. **Document** → Record findings and insights
 
 ## Models to Compare
@@ -164,7 +163,7 @@ Alternative strict pair (both with direct regressor counterparts):
 
 Both choices satisfy the non-ANN constraint and are fully supported by Scikit-Learn.
 
-## Evaluation Metrics (Classification)
+## Performance Metrics (Classification)
 
 Because medical-risk datasets are often imbalanced, do not rely only on accuracy.
 
