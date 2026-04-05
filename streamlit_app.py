@@ -125,6 +125,35 @@ def main():
         a[href*="share.streamlit.io"] {
             display: none !important;
         }
+        /* Force pointer cursor for interactive controls and indicator widgets. */
+        button,
+        [role="button"],
+        a,
+        input,
+        select,
+        textarea,
+        [data-baseweb="select"] * {
+            cursor: pointer !important;
+        }
+        div[data-testid="stSelectbox"] *,
+        div[data-testid="stNumberInput"] *,
+        div[data-testid="stSlider"] *,
+        div[data-testid="stCheckbox"] *,
+        div[data-testid="stRadio"] *,
+        div[data-testid="stMultiSelect"] *,
+        div[data-testid="stDateInput"] *,
+        div[data-testid="stTimeInput"] *,
+        div[data-testid="stTextInput"] *,
+        div[data-testid="stTextArea"] *,
+        div[data-testid="stToggle"] *,
+        [data-testid="stWidgetLabel"] * {
+            cursor: pointer !important;
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            cursor: text !important;
+        }
         </style>
         """,
         unsafe_allow_html=True,

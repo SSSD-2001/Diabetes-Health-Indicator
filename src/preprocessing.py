@@ -1,7 +1,6 @@
 """
 Data preprocessing functions for the Diabetes Health Indicator project.
 """
-
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
